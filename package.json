@@ -1,0 +1,14 @@
+{
+  "name": "instagram",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Azim Gadzhiagayev <me@azimgd.com> (http://azimgd.com)",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.8.1"
+  }
+}

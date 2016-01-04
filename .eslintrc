@@ -1,0 +1,13 @@
+{
+  "extends": "airbnb/base",
+  "env": {
+    "node": true,
+    "browser": false
+  },
+  "globals": {
+    "IS_SERVER": true
+  },
+  "rules": {
+    "eqeqeq": [2, "smart"]
+  }
+}
