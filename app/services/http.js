@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { extract } from '../utils';
 import { headers as defaultHeaders } from '../sources';
+import debug from 'debug';
 
 const http = (state) => ({
   /**
@@ -55,7 +56,7 @@ const http = (state) => ({
       .create({ baseURL: 'https://www.instagram.com/accounts/login/ajax/', headers })
       .request({ method: 'post', url: '/', data: `username=${username}&password=${password}` })
       .then(handleResponse)
-      .catch(console.log);
+      .catch((err) => { state.debug(err); return false; });
   },
 
   setLike: () => {
@@ -74,7 +75,7 @@ const http = (state) => ({
         throw new Error(res.data);
       }
 
-      console.log(res.data);
+      state.debug(res.data);
 
       return true;
     };
@@ -83,7 +84,7 @@ const http = (state) => ({
       .create({ baseURL: 'https://www.instagram.com/web/likes/1155699351212040183/like', headers })
       .request({ method: 'post', url: '/' })
       .then(handleResponse)
-      .catch(console.log);
+      .catch((err) => { state.debug(err); return false; });
   },
 });
 
@@ -92,7 +93,9 @@ const Class = (csrf = '', mid = '', sessionid = '') => {
     csrf,
     mid,
     sessionid,
+
     headers: defaultHeaders,
+    debug: debug('http'),
   };
 
   return Object.assign(
