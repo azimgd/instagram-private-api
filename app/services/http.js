@@ -8,9 +8,9 @@ const http = (state) => ({
    * response headers. Those tokens will be required for most api calls.
    */
   grabTokens: () => {
-    const extractTokens = (response) => {
-      const csrf = extract('csrftoken', response.headers['set-cookie']);
-      const mid = extract('mid', response.headers['set-cookie']);
+    const extractTokens = (res) => {
+      const csrf = extract('csrftoken', res.headers['set-cookie']);
+      const mid = extract('mid', res.headers['set-cookie']);
 
       if (csrf.length < 1 || mid.length < 1) {
         throw new Error('Tokens were not parsed');
@@ -33,6 +33,7 @@ const http = (state) => ({
     const headers = Object.assign(state.headers || {}, {
       'Cookie': `mid=${state.mid}; csrftoken=${state.csrf};`,
       'X-CSRFToken': `${state.csrf}`,
+      'Referer': 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -40,21 +41,57 @@ const http = (state) => ({
         throw new Error(res.data);
       }
 
-      return res.data.authenticated;
+      const sessionid = extract('sessionid', res.headers['set-cookie']);
+      const csrf = extract('csrftoken', res.headers['set-cookie']);
+
+      if (csrf.length < 1 || sessionid.length < 1) {
+        throw new Error('No session id was parsed');
+      }
+
+      return { csrf: csrf[0], sessionid: sessionid[0] };
     };
 
     return axios
       .create({ baseURL: 'https://www.instagram.com/accounts/login/ajax/', headers })
       .request({ method: 'post', url: '/', data: `username=${username}&password=${password}` })
       .then(handleResponse)
-      .catch(() => false);
+      .catch(console.log);
+  },
+
+  setLike: () => {
+    const headers = Object.assign(state.headers || {}, {
+      'X-CSRFToken': `${state.csrf}`,
+      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      'Referer': 'https://www.instagram.com/',
+    });
+
+    const handleResponse = (res) => {
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      if (res.data.status !== 'ok') {
+        throw new Error(res.data);
+      }
+
+      console.log(res.data);
+
+      return true;
+    };
+
+    return axios
+      .create({ baseURL: 'https://www.instagram.com/web/likes/1155699351212040183/like', headers })
+      .request({ method: 'post', url: '/' })
+      .then(handleResponse)
+      .catch(console.log);
   },
 });
 
-const Class = (csrf = '', mid = '') => {
+const Class = (csrf = '', mid = '', sessionid = '') => {
   const state = {
     csrf,
     mid,
+    sessionid,
     headers: defaultHeaders,
   };
 
