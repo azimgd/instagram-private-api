@@ -29,6 +29,9 @@ const http = (state) => ({
 
   /**
    * Perform authorisation with provided username/password parameters on instagram
+   *
+   * @param username
+   * @param password
    */
   auth: (username, password) => {
     const headers = Object.assign(state.headers || {}, {
@@ -61,6 +64,11 @@ const http = (state) => ({
       .catch((err) => { state.debug(err); return false; });
   },
 
+  /**
+   * Set like for selected media
+   *
+   * @param mediaId
+   */
   setLike: (mediaId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
@@ -89,6 +97,12 @@ const http = (state) => ({
       .catch((err) => { state.debug(err); return false; });
   },
 
+  /**
+   * Set comment on selected media
+   *
+   * @param mediaId
+   * @param text
+   */
   setComment: (mediaId, text) => {
     const comment = encodeURIComponent(text);
 
@@ -119,6 +133,11 @@ const http = (state) => ({
       .catch((err) => { state.debug(err); return false; });
   },
 
+  /**
+   * Follow selected user
+   *
+   * @param userId
+   */
   setFollow: (userId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
@@ -147,6 +166,11 @@ const http = (state) => ({
       .catch((err) => { state.debug(err); return false; });
   },
 
+  /**
+   * Unfollow selected user
+   *
+   * @param userId
+   */
   unsetFollow: (userId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
@@ -176,6 +200,13 @@ const http = (state) => ({
   },
 });
 
+/**
+ * Composition class
+ *
+ * @param csrf
+ * @param mid
+ * @param sessionid
+ */
 const Class = (csrf = '', mid = '', sessionid = '') => {
   const state = {
     csrf,
