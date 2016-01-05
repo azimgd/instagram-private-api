@@ -49,6 +49,8 @@ const http = (state) => ({
         throw new Error('No session id was parsed');
       }
 
+      state.debug(res.data);
+
       return { csrf: csrf[0], sessionid: sessionid[0] };
     };
 
@@ -59,7 +61,7 @@ const http = (state) => ({
       .catch((err) => { state.debug(err); return false; });
   },
 
-  setLike: () => {
+  setLike: (mediaId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
@@ -81,8 +83,38 @@ const http = (state) => ({
     };
 
     return axios
-      .create({ baseURL: 'https://www.instagram.com/web/likes/1155699351212040183/like', headers })
+      .create({ baseURL: `https://www.instagram.com/web/likes/${mediaId}/like`, headers })
       .request({ method: 'post', url: '/' })
+      .then(handleResponse)
+      .catch((err) => { state.debug(err); return false; });
+  },
+
+  setComment: (mediaId, text) => {
+    const comment = encodeURIComponent(text);
+
+    const headers = Object.assign(state.headers || {}, {
+      'X-CSRFToken': `${state.csrf}`,
+      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      'Referer': 'https://www.instagram.com/',
+    });
+
+    const handleResponse = (res) => {
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      if (res.data.status !== 'ok') {
+        throw new Error(res.data);
+      }
+
+      state.debug(res.data);
+
+      return true;
+    };
+
+    return axios
+      .create({ baseURL: `https://www.instagram.com/web/comments/${mediaId}/add`, headers })
+      .request({ method: 'post', url: '/', data: `comment_text=${comment}` })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
