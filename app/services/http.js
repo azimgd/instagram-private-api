@@ -118,6 +118,62 @@ const http = (state) => ({
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
+
+  setFollow: (userId) => {
+    const headers = Object.assign(state.headers || {}, {
+      'X-CSRFToken': `${state.csrf}`,
+      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      'Referer': 'https://www.instagram.com/',
+    });
+
+    const handleResponse = (res) => {
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      if (res.data.status !== 'ok') {
+        throw new Error(res.data);
+      }
+
+      state.debug(res.data);
+
+      return true;
+    };
+
+    return axios
+      .create({ baseURL: `https://www.instagram.com/web/friendships/${userId}/follow`, headers })
+      .request({ method: 'post', url: '/' })
+      .then(handleResponse)
+      .catch((err) => { state.debug(err); return false; });
+  },
+
+  unsetFollow: (userId) => {
+    const headers = Object.assign(state.headers || {}, {
+      'X-CSRFToken': `${state.csrf}`,
+      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      'Referer': 'https://www.instagram.com/',
+    });
+
+    const handleResponse = (res) => {
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      if (res.data.status !== 'ok') {
+        throw new Error(res.data);
+      }
+
+      state.debug(res.data);
+
+      return true;
+    };
+
+    return axios
+      .create({ baseURL: `https://www.instagram.com/web/friendships/${userId}/unfollow`, headers })
+      .request({ method: 'post', url: '/' })
+      .then(handleResponse)
+      .catch((err) => { state.debug(err); return false; });
+  },
 });
 
 const Class = (csrf = '', mid = '', sessionid = '') => {
