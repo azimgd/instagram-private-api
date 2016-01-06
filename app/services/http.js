@@ -87,7 +87,7 @@ const http = (state) => ({
 
       state.debug(res.data);
 
-      return true;
+      return res.data;
     };
 
     return axios
@@ -123,7 +123,7 @@ const http = (state) => ({
 
       state.debug(res.data);
 
-      return true;
+      return res.data;
     };
 
     return axios
@@ -156,7 +156,7 @@ const http = (state) => ({
 
       state.debug(res.data);
 
-      return true;
+      return res.data;
     };
 
     return axios
@@ -189,7 +189,7 @@ const http = (state) => ({
 
       state.debug(res.data);
 
-      return true;
+      return res.data;
     };
 
     return axios
