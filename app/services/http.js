@@ -207,15 +207,11 @@ const http = (state) => ({
  * @param mid
  * @param sessionid
  */
-const Class = (csrf = '', mid = '', sessionid = '') => {
-  const state = {
-    csrf,
-    mid,
-    sessionid,
-
+const Class = (res = {}) => {
+  const state = Object.assign(res, {
     headers: defaultHeaders,
     debug: debug('http'),
-  };
+  });
 
   return Object.assign(
     {},

@@ -1,18 +1,40 @@
 import Http from './app/services/http';
 
-const username = '';
-const password = '';
+const auth = (username, password) => {
+  return (new Http)
+    .grabTokens()
+    .then((res) => new Http(res).auth(username, password))
+    .catch(() => false);
+};
 
-(new Http).grabTokens().then(
-  (res) => {
-    console.log(res);
-    (new Http(res.csrf, res.mid)).auth(username, password).then((auth) => {
-      if(!auth) {
-        console.log('not authorized');
-        return false;
-      }
+const setLike = (headers, mediaId) => {
+  return (new Http(headers))
+    .setLike(mediaId)
+    .catch(() => false);
+};
 
-      (new Http(auth.csrf, res.mid, auth.sessionid)).setLike().then(console.log);
-    });
-  }
-);
+const setComment = (headers, mediaId, text) => {
+  return (new Http(headers))
+    .setComment(mediaId, text)
+    .catch(() => false);
+};
+
+const setFollow = (headers, userId) => {
+  return (new Http(headers))
+    .setFollow(userId)
+    .catch(() => false);
+};
+
+const unsetFollow = (headers, userId) => {
+  return (new Http(headers))
+    .unsetFollow(userId)
+    .catch(() => false);
+};
+
+export default {
+  auth,
+  setLike,
+  setComment,
+  setFollow,
+  unsetFollow,
+};
