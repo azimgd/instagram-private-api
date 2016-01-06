@@ -58,8 +58,8 @@ const http = (state) => ({
     };
 
     return axios
-      .create({ baseURL: 'https://www.instagram.com/accounts/login/ajax/', headers })
-      .request({ method: 'post', url: '/', data: `username=${username}&password=${password}` })
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: '/accounts/login/ajax/', data: `username=${username}&password=${password}` })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
@@ -91,8 +91,8 @@ const http = (state) => ({
     };
 
     return axios
-      .create({ baseURL: `https://www.instagram.com/web/likes/${mediaId}/like`, headers })
-      .request({ method: 'post', url: '/' })
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: `/web/likes/${mediaId}/like/` })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
@@ -127,8 +127,8 @@ const http = (state) => ({
     };
 
     return axios
-      .create({ baseURL: `https://www.instagram.com/web/comments/${mediaId}/add`, headers })
-      .request({ method: 'post', url: '/', data: `comment_text=${comment}` })
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: `/web/comments/${mediaId}/add/`, data: `comment_text=${comment}` })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
@@ -160,8 +160,8 @@ const http = (state) => ({
     };
 
     return axios
-      .create({ baseURL: `https://www.instagram.com/web/friendships/${userId}/follow`, headers })
-      .request({ method: 'post', url: '/' })
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: `/web/friendships/${userId}/follow/` })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
@@ -193,8 +193,8 @@ const http = (state) => ({
     };
 
     return axios
-      .create({ baseURL: `https://www.instagram.com/web/friendships/${userId}/unfollow`, headers })
-      .request({ method: 'post', url: '/' })
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: `/web/friendships/${userId}/unfollow/` })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
