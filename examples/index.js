@@ -1,7 +1,9 @@
 import bot from '../index';
+import dotenv from '../../lib/main'
+dotenv.config()
 
-const username = '';
-const password = '';
+const username = process.env.username;
+const password = process.env.password;
 
 bot.auth(username, password)
 .then((headers) => bot.setLike(headers, '1156352422809813646'));
