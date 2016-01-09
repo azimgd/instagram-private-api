@@ -36,9 +36,9 @@ const http = (state) => ({
    */
   auth: (username, password) => {
     const headers = Object.assign(state.headers || {}, {
-      'Cookie': `mid=${state.mid}; csrftoken=${state.csrf};`,
+      Cookie: `mid=${state.mid}; csrftoken=${state.csrf};`,
       'X-CSRFToken': `${state.csrf}`,
-      'Referer': 'https://www.instagram.com/',
+      Referer: 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -58,9 +58,11 @@ const http = (state) => ({
       return { csrf: csrf[0], sessionid: sessionid[0] };
     };
 
+    const data = `username=${username}&password=${password}`;
+
     return axios
       .create({ baseURL: 'https://www.instagram.com/', headers })
-      .request({ method: 'post', url: '/accounts/login/ajax/', data: `username=${username}&password=${password}` })
+      .request({ method: 'post', url: '/accounts/login/ajax/', data })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
@@ -73,8 +75,8 @@ const http = (state) => ({
   setLike: (mediaId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
-      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      'Referer': 'https://www.instagram.com/',
+      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      Referer: 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -109,8 +111,8 @@ const http = (state) => ({
 
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
-      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      'Referer': 'https://www.instagram.com/',
+      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      Referer: 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -127,9 +129,11 @@ const http = (state) => ({
       return res.data;
     };
 
+    const data = `comment_text=${comment}`;
+
     return axios
       .create({ baseURL: 'https://www.instagram.com/', headers })
-      .request({ method: 'post', url: `/web/comments/${mediaId}/add/`, data: `comment_text=${comment}` })
+      .request({ method: 'post', url: `/web/comments/${mediaId}/add/`, data })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
@@ -142,8 +146,8 @@ const http = (state) => ({
   setFollow: (userId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
-      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      'Referer': 'https://www.instagram.com/',
+      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      Referer: 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -175,8 +179,8 @@ const http = (state) => ({
   unsetFollow: (userId) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
-      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      'Referer': 'https://www.instagram.com/',
+      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      Referer: 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -203,8 +207,8 @@ const http = (state) => ({
   getMedia: (startCursor, count) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
-      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      'Referer': 'https://www.instagram.com/',
+      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      Referer: 'https://www.instagram.com/',
     });
 
     const handleResponse = (res) => {
@@ -221,14 +225,14 @@ const http = (state) => ({
       return res.data;
     };
 
-    const query = state.query.replace('{{start_cursor}}', startCursor).replace('{{count}}', count);
+    const data = state.query.replace('{{start_cursor}}', startCursor).replace('{{count}}', count);
 
     return axios
       .create({ baseURL: 'https://www.instagram.com/', headers })
-      .request({ method: 'post', url: `/query/`, data: query })
+      .request({ method: 'post', url: `/query/`, data })
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
-  }
+  },
 });
 
 /**

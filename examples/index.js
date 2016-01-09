@@ -18,5 +18,5 @@ bot.auth(username, password)
 .then((headers) => bot.setFollow(headers, '29738951'));
 
 bot.auth(username, password)
-.then((headers) => bot.getMedia(headers, null))
+.then((headers) => bot.getMedia(headers))
 .then((res) => console.log(res.feed.media.nodes));
