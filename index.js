@@ -31,9 +31,9 @@ const unsetFollow = (headers, userId) => {
     .catch(() => false);
 };
 
-const getMedia = (headers, startCursor, count = 12) => {
+const getSelfFeed = (headers, startCursor = null, count = 12) => {
   return (new Http(headers))
-    .getMedia(startCursor, count)
+    .getSelfFeed(startCursor, count)
     .catch(() => false);
 };
 
@@ -43,5 +43,5 @@ export default {
   setComment,
   setFollow,
   unsetFollow,
-  getMedia,
+  getSelfFeed,
 };

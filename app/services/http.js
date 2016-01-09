@@ -204,7 +204,7 @@ const http = (state) => ({
       .catch((err) => { state.debug(err); return false; });
   },
 
-  getMedia: (startCursor, count) => {
+  getSelfFeed: (startCursor, count) => {
     const headers = Object.assign(state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
