@@ -1,4 +1,4 @@
-import queryMedia from './qMedia';
+import getSelfFeed from './getSelfFeed';
 import headers from './headers';
 
-export default { headers, queryMedia };
+export default { headers, getSelfFeed };

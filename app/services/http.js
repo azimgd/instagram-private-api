@@ -2,7 +2,7 @@ import axios from 'axios';
 import { extract } from '../utils';
 import { headers as defaultHeaders } from '../sources';
 import debug from 'debug';
-import { queryMedia } from '../sources/';
+import { getSelfFeed } from '../sources/';
 
 const http = (state) => ({
   /**
@@ -246,7 +246,7 @@ const Class = (res = {}) => {
   const state = Object.assign(res, {
     headers: defaultHeaders,
     debug: debug('http'),
-    query: queryMedia,
+    query: getSelfFeed,
   });
 
   return Object.assign(
