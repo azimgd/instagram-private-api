@@ -2,6 +2,7 @@ import axios from 'axios';
 import { extract } from '../utils';
 import { headers as defaultHeaders } from '../sources';
 import debug from 'debug';
+import { queryMedia } from '../sources/';
 
 const http = (state) => ({
   /**
@@ -198,6 +199,36 @@ const http = (state) => ({
       .then(handleResponse)
       .catch((err) => { state.debug(err); return false; });
   },
+
+  getMedia: (startCursor, count) => {
+    const headers = Object.assign(state.headers || {}, {
+      'X-CSRFToken': `${state.csrf}`,
+      'Cookie': `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      'Referer': 'https://www.instagram.com/',
+    });
+
+    const handleResponse = (res) => {
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      if (res.data.status !== 'ok') {
+        throw new Error(res.data);
+      }
+
+      state.debug(res.data);
+
+      return res.data;
+    };
+
+    const query = state.query.replace('{{start_cursor}}', startCursor).replace('{{count}}', count);
+
+    return axios
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: `/query/`, data: query })
+      .then(handleResponse)
+      .catch((err) => { state.debug(err); return false; });
+  }
 });
 
 /**
@@ -211,6 +242,7 @@ const Class = (res = {}) => {
   const state = Object.assign(res, {
     headers: defaultHeaders,
     debug: debug('http'),
+    query: queryMedia,
   });
 
   return Object.assign(

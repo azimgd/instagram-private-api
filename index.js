@@ -31,10 +31,17 @@ const unsetFollow = (headers, userId) => {
     .catch(() => false);
 };
 
+const getMedia = (headers, startCursor, count = 12) => {
+  return (new Http(headers))
+    .getMedia(startCursor, count)
+    .catch(() => false);
+};
+
 export default {
   auth,
   setLike,
   setComment,
   setFollow,
   unsetFollow,
+  getMedia,
 };

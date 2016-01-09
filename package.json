@@ -11,6 +11,9 @@
     "debug": "^2.2.0"
   },
   "devDependencies": {
-    "dotenv": "^1.2.0"
+    "dotenv": "^1.2.0",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^3.1.0",
+    "eslint-plugin-react": "^3.14.0"
   }
 }

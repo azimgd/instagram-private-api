@@ -1,6 +1,6 @@
 import bot from '../index';
-import dotenv from '../../lib/main'
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 const username = process.env.username;
 const password = process.env.password;
@@ -16,3 +16,7 @@ bot.auth(username, password)
 
 bot.auth(username, password)
 .then((headers) => bot.setFollow(headers, '29738951'));
+
+bot.auth(username, password)
+.then((headers) => bot.getMedia(headers, null))
+.then((res) => console.log(res.feed.media.nodes));
