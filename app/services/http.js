@@ -2,7 +2,7 @@ import axios from 'axios';
 import { extract } from '../utils';
 import { headers as defaultHeaders } from '../sources';
 import debug from 'debug';
-import { getSelfFeed } from '../sources/';
+import { getSelfFeed, getFeedByHashtag } from '../sources/';
 
 const http = (state) => ({
   /**
@@ -225,7 +225,40 @@ const http = (state) => ({
       return res.data;
     };
 
-    const data = state.query.replace('{{start_cursor}}', startCursor).replace('{{count}}', count);
+    const data = state.queries.getSelfFeed.replace('{{start_cursor}}', startCursor).replace('{{count}}', count);
+
+    return axios
+      .create({ baseURL: 'https://www.instagram.com/', headers })
+      .request({ method: 'post', url: `/query/`, data })
+      .then(handleResponse)
+      .catch((err) => { state.debug(err); return false; });
+  },
+
+  getFeedByHashtag: (hashtag, startCursor, count) => {
+    const headers = Object.assign(state.headers || {}, {
+      'X-CSRFToken': `${state.csrf}`,
+      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
+      Referer: 'https://www.instagram.com/',
+    });
+
+    const handleResponse = (res) => {
+      if (res.status !== 200) {
+        throw new Error(res.data);
+      }
+
+      if (res.data.status !== 'ok') {
+        throw new Error(res.data);
+      }
+
+      state.debug(res.data);
+
+      return res.data;
+    };
+
+    const data = state.queries.getFeedByHashtag
+      .replace('{{hashtag}}', hashtag)
+      .replace('{{start_cursor}}', startCursor)
+      .replace('{{count}}', count);
 
     return axios
       .create({ baseURL: 'https://www.instagram.com/', headers })
@@ -246,7 +279,10 @@ const Class = (res = {}) => {
   const state = Object.assign(res, {
     headers: defaultHeaders,
     debug: debug('http'),
-    query: getSelfFeed,
+    queries: {
+      getSelfFeed,
+      getFeedByHashtag,
+    },
   });
 
   return Object.assign(

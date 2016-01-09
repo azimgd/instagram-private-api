@@ -18,4 +18,4 @@ bot.auth(username, password)
 .then((headers) => bot.setFollow(headers, '29738951'));
 
 bot.auth(username, password)
-.then((headers) => bot.getSelfFeed(headers));
+.then((headers) => bot.getFeedByHashtag(headers, 'cats'));

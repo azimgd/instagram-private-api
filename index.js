@@ -37,6 +37,12 @@ const getSelfFeed = (headers, startCursor = null, count = 12) => {
     .catch(() => false);
 };
 
+const getFeedByHashtag = (headers, hashtag, startCursor = null, count = 12) => {
+  return (new Http(headers))
+    .getFeedByHashtag(hashtag, startCursor, count)
+    .catch(() => false);
+};
+
 export default {
   auth,
   setLike,
@@ -44,4 +50,5 @@ export default {
   setFollow,
   unsetFollow,
   getSelfFeed,
+  getFeedByHashtag,
 };
