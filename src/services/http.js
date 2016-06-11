@@ -35,7 +35,7 @@ const http = (state) => ({
    * @param password
    */
   auth: (username, password) => {
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       Cookie: `mid=${state.mid}; csrftoken=${state.csrf};`,
       'X-CSRFToken': `${state.csrf}`,
       Referer: 'https://www.instagram.com/',
@@ -73,7 +73,7 @@ const http = (state) => ({
    * @param mediaId
    */
   setLike: (mediaId) => {
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
       Referer: 'https://www.instagram.com/',
@@ -109,7 +109,7 @@ const http = (state) => ({
   setComment: (mediaId, text) => {
     const comment = encodeURIComponent(text);
 
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
       Referer: 'https://www.instagram.com/',
@@ -144,7 +144,7 @@ const http = (state) => ({
    * @param userId
    */
   setFollow: (userId) => {
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
       Referer: 'https://www.instagram.com/',
@@ -177,7 +177,7 @@ const http = (state) => ({
    * @param userId
    */
   unsetFollow: (userId) => {
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
       Referer: 'https://www.instagram.com/',
@@ -205,7 +205,7 @@ const http = (state) => ({
   },
 
   getSelfFeed: (startCursor, count) => {
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
       Referer: 'https://www.instagram.com/',
@@ -235,7 +235,7 @@ const http = (state) => ({
   },
 
   getFeedByHashtag: (hashtag, startCursor, count) => {
-    const headers = Object.assign(state.headers || {}, {
+    const headers = Object.assign({}, state.headers || {}, {
       'X-CSRFToken': `${state.csrf}`,
       Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
       Referer: 'https://www.instagram.com/',
@@ -276,7 +276,7 @@ const http = (state) => ({
  * @param sessionid
  */
 const Class = (res = {}) => {
-  const state = Object.assign(res, {
+  const state = Object.assign({}, res, {
     headers: defaultHeaders,
     debug: debug('http'),
     queries: {
