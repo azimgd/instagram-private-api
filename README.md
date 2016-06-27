@@ -10,19 +10,20 @@ Instagram client that works with username/password credentials
 
 ## Example
 ```
-import ig from 'instagram-wrapper';
+import ig from 'instagram-private-api/index';
 
 const username = 'username';
 const password = 'password';
 
 ig.auth(username, password)
-.then((headers) => ig.setLike(headers, '1157751993106715465_5932067'));
+.then((headers) => ig.setLike(headers, '115775199310623465_5932067'));
 
 ig.auth(username, password)
-.then((headers) => ig.setComment(headers, '1156408808103072490_518286907', 'somehow this comment must be ignored, i guess!'));
+.then((headers) => ig.setComment(headers, '11564088133072490_518286907', 'somehow this comment must be ignored, i guess!'));
 
-ig.auth(username, password)
-.then((headers) => ig.getFeedByHashtag(headers, 'cats'));
+bot.auth(username, password)
+.then((headers) => bot.getSelfFeed(headers))
+.then(res => console.log(res.feed.media.nodes));
 ```
 
 ## API
