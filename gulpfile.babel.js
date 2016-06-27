@@ -20,4 +20,4 @@ gulp.task('watch', () => {
   gulp.watch('./src/**/*.js', ['babel-source']);
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', ['babel-source', 'babel-example', 'watch']);

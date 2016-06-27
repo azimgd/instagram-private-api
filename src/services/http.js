@@ -36,11 +36,8 @@ const http = (state) => ({
    * @param password
    */
   auth: (username, password) => {
-    const headers = Object.assign({}, state.headers || {}, {
-      Cookie: `mid=${state.mid}; csrftoken=${state.csrf};`,
-      'X-CSRFToken': `${state.csrf}`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid } = state;
+    const headers = state.authHeaders({ csrf, mid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -48,15 +45,14 @@ const http = (state) => ({
       }
 
       const sessionid = utils.extract('sessionid', res.headers['set-cookie']);
-      const csrf = utils.extract('csrftoken', res.headers['set-cookie']);
+      const newcsrf = utils.extract('csrftoken', res.headers['set-cookie']);
 
-      if (csrf.length < 1 || sessionid.length < 1) {
+      if (newcsrf.length < 1 || sessionid.length < 1) {
         throw new Error('No session id was parsed');
       }
 
       state.debug(res.data);
-
-      return { csrf: csrf[0], sessionid: sessionid[0] };
+      return { csrf: newcsrf[0], sessionid: sessionid[0] };
     };
 
     const data = `username=${username}&password=${password}`;
@@ -74,11 +70,8 @@ const http = (state) => ({
    * @param mediaId
    */
   setLike: (mediaId) => {
-    const headers = Object.assign({}, state.headers || {}, {
-      'X-CSRFToken': `${state.csrf}`,
-      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid, sessionid } = state;
+    const headers = state.authHeaders({ csrf, mid, sessionid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -90,7 +83,6 @@ const http = (state) => ({
       }
 
       state.debug(res.data);
-
       return res.data;
     };
 
@@ -109,12 +101,8 @@ const http = (state) => ({
    */
   setComment: (mediaId, text) => {
     const comment = encodeURIComponent(text);
-
-    const headers = Object.assign({}, state.headers || {}, {
-      'X-CSRFToken': `${state.csrf}`,
-      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid, sessionid } = state;
+    const headers = state.authHeaders({ csrf, mid, sessionid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -126,7 +114,6 @@ const http = (state) => ({
       }
 
       state.debug(res.data);
-
       return res.data;
     };
 
@@ -145,11 +132,8 @@ const http = (state) => ({
    * @param userId
    */
   setFollow: (userId) => {
-    const headers = Object.assign({}, state.headers || {}, {
-      'X-CSRFToken': `${state.csrf}`,
-      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid, sessionid } = state;
+    const headers = state.authHeaders({ csrf, mid, sessionid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -161,7 +145,6 @@ const http = (state) => ({
       }
 
       state.debug(res.data);
-
       return res.data;
     };
 
@@ -178,11 +161,8 @@ const http = (state) => ({
    * @param userId
    */
   unsetFollow: (userId) => {
-    const headers = Object.assign({}, state.headers || {}, {
-      'X-CSRFToken': `${state.csrf}`,
-      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid, sessionid } = state;
+    const headers = state.authHeaders({ csrf, mid, sessionid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -194,7 +174,6 @@ const http = (state) => ({
       }
 
       state.debug(res.data);
-
       return res.data;
     };
 
@@ -206,11 +185,8 @@ const http = (state) => ({
   },
 
   getSelfFeed: (startCursor, count) => {
-    const headers = Object.assign({}, state.headers || {}, {
-      'X-CSRFToken': `${state.csrf}`,
-      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid, sessionid } = state;
+    const headers = state.authHeaders({ csrf, mid, sessionid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -222,11 +198,12 @@ const http = (state) => ({
       }
 
       state.debug(res.data);
-
       return res.data;
     };
 
-    const data = state.queries.getSelfFeed.replace('{{start_cursor}}', startCursor).replace('{{count}}', count);
+    const data = state.queries.getSelfFeed
+      .replace('{{start_cursor}}', startCursor)
+      .replace('{{count}}', count);
 
     return axios
       .create({ baseURL: 'https://www.instagram.com/', headers })
@@ -236,11 +213,8 @@ const http = (state) => ({
   },
 
   getFeedByHashtag: (hashtag, startCursor, count) => {
-    const headers = Object.assign({}, state.headers || {}, {
-      'X-CSRFToken': `${state.csrf}`,
-      Cookie: `mid=${state.mid}; sessionid=${state.sessionid}; csrftoken=${state.csrf};`,
-      Referer: 'https://www.instagram.com/',
-    });
+    const { csrf, mid, sessionid } = state;
+    const headers = state.authHeaders({ csrf, mid, sessionid });
 
     const handleResponse = (res) => {
       if (res.status !== 200) {
@@ -252,7 +226,6 @@ const http = (state) => ({
       }
 
       state.debug(res.data);
-
       return res.data;
     };
 
@@ -277,8 +250,19 @@ const http = (state) => ({
  * @param sessionid
  */
 const Class = (res = {}) => {
+  const authHeaders = ({ csrf, mid, sessionid }) => ({
+    'X-CSRFToken': `${csrf}`,
+    Cookie: `mid=${mid}; csrftoken=${csrf}; sessionid=${sessionid};`,
+    Referer: 'https://www.instagram.com/',
+  });
+
+  const generateAuthHeaders = (authHeadersGenerator, headers, authTokens) => {
+    return Object.assign({}, headers || {}, authHeadersGenerator(authTokens));
+  };
+
   const state = Object.assign({}, res, {
     headers: defaultHeaders,
+    authHeaders: generateAuthHeaders.bind(null, authHeaders, defaultHeaders),
     debug: debug('http'),
     queries: {
       getSelfFeed,
