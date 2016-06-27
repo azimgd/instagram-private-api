@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { extract } from '../utils';
-import { headers as defaultHeaders } from '../sources';
+import utils from '../utils';
+import defaultHeaders from '../sources/defaultHeaders';
+import getFeedByHashtag from '../sources/getFeedByHashtag';
+import getSelfFeed from '../sources/getSelfFeed';
 import debug from 'debug';
-import { getSelfFeed, getFeedByHashtag } from '../sources/';
 
 const http = (state) => ({
   /**
@@ -11,8 +12,8 @@ const http = (state) => ({
    */
   grabTokens: () => {
     const extractTokens = (res) => {
-      const csrf = extract('csrftoken', res.headers['set-cookie']);
-      const mid = extract('mid', res.headers['set-cookie']);
+      const csrf = utils.extract('csrftoken', res.headers['set-cookie']);
+      const mid = utils.extract('mid', res.headers['set-cookie']);
 
       if (csrf.length < 1 || mid.length < 1) {
         throw new Error('Tokens were not parsed');
@@ -46,8 +47,8 @@ const http = (state) => ({
         throw new Error(res.data);
       }
 
-      const sessionid = extract('sessionid', res.headers['set-cookie']);
-      const csrf = extract('csrftoken', res.headers['set-cookie']);
+      const sessionid = utils.extract('sessionid', res.headers['set-cookie']);
+      const csrf = utils.extract('csrftoken', res.headers['set-cookie']);
 
       if (csrf.length < 1 || sessionid.length < 1) {
         throw new Error('No session id was parsed');
