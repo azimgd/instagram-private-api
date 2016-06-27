@@ -2,8 +2,11 @@
 
 Instagram client that works with username/password credentials
 
-## Installation
-`npm install instagram-private`
+## Development and testing
+- `npm install`
+- Add your keys into */examples/.env*
+- `gulp`
+- `cd examples && node index.js`
 
 ## Example
 ```
